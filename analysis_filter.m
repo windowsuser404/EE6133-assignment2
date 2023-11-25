@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%% analysis %%%%%%%%%%%%%%%%%
-[x,Fs] = audioread("music16khz.wav");
+[x,Fs] = audioread("speech8khz.wav");
 Hd = equiripple_low_pass().numerator;
 freqz(Hd);
 saveas(gcf,"Filter_response.jpg");
@@ -27,9 +27,18 @@ end
 for i=1:length(y1)
     y_good(2*i-1) = y1(i); %start of commutator
 end
-
-T = 1/2*(conv(H0,k0)+conv(H1,k1));
+temph = zeros(1,length(Hd));
+for i=1:length(Hd)
+    temph(i) = (-1)^i*(Hd(i));
+end
+%T = 1/2*(conv(Hd,Hd)-conv(temph,temph));
+T = conv(upsample(H0,2),upsample(H1,2));
+T = conv(T,[0,1]);
 zerophase(T,1);
+% hold on
+% [H,w] = zerophase(Hd);
+% plot(w/pi, H.^2);
+% plot(1-w/pi, H.^2);
 saveas(gcf,"zerophase.jpg");
 
 k0 = H0;
@@ -48,16 +57,15 @@ end
 Y_good = fft(y_good);
 Y_bad = fft(y_bad);
 
-% L = length(y_good);
-% plot(Fs/L*(-L/2:L/2-1),abs(fftshift(Y_good)),"LineWidth",3)
-% title("Magnitude spectrum")
-% xlabel("f(Hz)")
-% ylabel("|fft(X)|")
-% saveas(gcf,"y_good.jpg")
-% 
-% L = length(y_bad);
-% plot(Fs/L*(-L/2:L/2-1),abs(fftshift(Y_bad)),"LineWidth",3)
-% title("Complex Magnitude of fft Spectrum")
-% xlabel("f (Hz)")
-% ylabel("|fft(X)|")
-% saveas(gcf,"y_bad.jpg")
+L = length(y_good);
+plot(Fs/L*(-L/2:L/2-1),abs(fftshift(Y_good)),"LineWidth",3)
+title("Magnitude spectrum")
+xlabel("f(Hz)")
+ylabel("|fft(X)|")
+saveas(gcf,"y_good.jpg")
+L = length(y_bad);
+plot(Fs/L*(-L/2:L/2-1),abs(fftshift(Y_bad)),"LineWidth",3)
+title("Complex Magnitude of fft Spectrum")
+xlabel("f (Hz)")
+ylabel("|fft(X)|")
+saveas(gcf,"y_bad.jpg")

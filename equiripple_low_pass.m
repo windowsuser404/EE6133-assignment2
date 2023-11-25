@@ -9,12 +9,12 @@ function Hd = equiripple_low_pass
 
 % All frequency values are normalized to 1.
 
-N     = 61;     % Order
+N     = 191;     % Order
 Fpass = 0.45;  % Passband Frequency
 Fstop = 0.55;  % Stopband Frequency
-Wpass = 0.01;     % Passband Weight
-Wstop = 0.01;     % Stopband Weight
-dens  = 20;    % Density Factor
+Wpass = 1;     % Passband Weight
+Wstop = 0.001;     % Stopband Weight
+dens  = 100;    % Density Factor
 
 % Calculate the coefficients using the FIRPM function.
 b  = firpm(N, [0 Fpass Fstop 1], [1 1 0 0], [Wpass Wstop], {dens});
