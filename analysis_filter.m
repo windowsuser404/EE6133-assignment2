@@ -34,6 +34,7 @@ end
 %T = 1/2*(conv(Hd,Hd)-conv(temph,temph));
 T = conv(upsample(H0,2),upsample(H1,2));
 T = conv(T,[0,1]);
+T = 2*T; % T(Z) = 2*Z^(-1)*H0(Z2)*H1(Z2)
 zerophase(T,1);
 % hold on
 % [H,w] = zerophase(Hd);
